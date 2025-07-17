@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虎厨生骨肉食量计算器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f0ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 850px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #5a9cff, #3a7bd5);
+            color: white;
+            padding: 25px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cat-decoration {
+            position: absolute;
+            font-size: 7rem;
+            opacity: 0.15;
+            z-index: 1;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .cat-1 {
+            left: 30px;
+        }
+        
+        .cat-2 {
+            right: 40px;
+        }
+        
+        .content {
+            display: flex;
+            padding: 0;
+            min-height: 400px;
+        }
+        
+        .calculator {
+            flex: 1;
+            padding: 35px;
+            background: rgba(245, 251, 255, 0.7);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a4a4a;
+            font-size: 1.05rem;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #5a9cff;
+            font-size: 1.2rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            color: #444;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #5a9cff;
+            box-shadow: 0 0 0 3px rgba(90, 156, 255, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, #5a9cff, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(90, 156, 255, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(90, 156, 255, 0.5);
+        }
+        
+        .result {
+            flex: 1;
+            padding: 35px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px dashed #b3e0ff;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .result-box h2 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .calorie-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #5a9cff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .meat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ff7eb3, #ff758c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+        
+        .unit {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .cat-stage {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3a7bd5;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, #5a9cff, #ff7eb3);
+            margin: 20px 0;
+            border-radius: 2px;
+            width: 80%;
+            align-self: center;
+        }
+        
+        .special-conditions {
+            background: #f8fbff;
+            padding: 25px 40px;
+            border-top: 2px solid #e6f0ff;
+        }
+        
+        .special-conditions h3 {
+            color: #3a7bd5;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        
+        .condition-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .condition {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e6f0ff;
+        }
+        
+        .condition h4 {
+            color: #ff758c;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .condition p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .meat-calories {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            background: #f8f8f8;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            justify-content: center;
+        }
+        
+        .meat-calories input {
+            width: 80px;
+            padding: 8px 10px;
+            margin: 0 10px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .calorie-value {
+                font-size: 2.5rem;
+            }
+            
+            .meat-value {
+                font-size: 1.8rem;
+            }
+            
+            .condition-list {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        .formula {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-cat cat-decoration cat-1"></i>
+            <i class="fas fa-paw cat-decoration cat-2"></i>
+            <h1>🐱虎厨生骨肉 食量计算器</h1>
+        </div>
+        
+        <div class="content">
+            <div class="calculator">
+                <div class="form-group">
+                    <label for="age"><i class="fas fa-cat"></i> 猫咪年龄（岁）</label>
+                    <div class="input-container">
+                        <i class="fas fa-birthday-cake"></i>
+                        <input type="number" id="age" min="0.1" max="30" step="0.1" placeholder="请输入猫咪年龄" value="3">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weight"><i class="fas fa-weight-hanging"></i> 猫咪体重（kg）</label>
+                    <div class="input-container">
+                        <i class="fas fa-weight-scale"></i>
+                        <input type="number" id="weight" min="0.1" max="20" step="0.1" placeholder="请输入猫咪体重" value="4.5">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-drumstick-bite"></i> 每100克肉的热量（千卡）</label>
+                    <div class="meat-calories">
+                        <span>每100克肉提供</span>
+                        <input type="number" id="meat-calories" min="50" max="300" step="1" value="153">
+                        <span>千卡热量</span>
+                    </div>
+                </div>
+                
+                <button id="calculate-btn">
+                    <i class="fas fa-calculator"></i> 计算每日热量与肉量
+                </button>
+                
+                <div class="formula">
+                    <p><strong>计算公式：</strong> 每日热量 = 70 × 体重<sup>0.75</sup> × 年龄系数</p>
+                    <p><strong>每日肉量</strong> = (每日热量 ÷ 每100克肉热量) × 100</p>
+                </div>
+            </div>
+            
+            <div class="result">
+                <div class="result-box">
+                    <h2>每日所需热量</h2>
+                    <div class="calorie-value" id="calorie-result">276</div>
+                    <div class="unit">千卡 / 天</div>
+                    <div class="cat-stage" id="cat-stage">成年猫 (1-7岁)</div>
+                    
+                    <div class="divider"></div>
+                    
+                    <h2>每日建议肉量</h2>
+                    <div class="meat-value" id="meat-result">180</div>
+                    <div class="unit">克 / 天</div>
+                    <div class="cat-stage" id="meat-cal-note">（按每100克肉提供153千卡计算）</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="special-conditions">
+            <h3><i class="fas fa-exclamation-circle"></i> 特殊情况调整系数</h3>
+            <div class="condition-list">
+                <div class="condition">
+                    <h4>孕猫/哺乳期母猫</h4>
+                    <p>热量需求为计算结果的2-4倍</p>
+                </div>
+                
+                <div class="condition">
+                    <h4>大活动量猫咪</h4>
+                    <p>热量需求可增加20-50%</p>
+                </div>
+                
+                <div class="condition">
+                    <h4>减肥猫咪</h4>
+                    <p>热量需求减少15-20%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculate-btn').addEventListener('click', calculate);
+        document.getElementById('meat-calories').addEventListener('change', calculate);
+        
+        function calculate() {
+            const age = parseFloat(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const meatCalPer100g = parseFloat(document.getElementById('meat-calories').value) || 153;
+            
+            if (isNaN(age) || isNaN(weight) || age <= 0 || weight <= 0) {
+                document.getElementById('calorie-result').textContent = '--';
+                document.getElementById('meat-result').textContent = '--';
+                document.getElementById('cat-stage').textContent = '请输入有效的年龄和体重';
+                return;
+            }
+            
+            // 计算RER（静息能量需求）
+            const rer = 70 * Math.pow(weight, 0.75);
+            
+            // 根据年龄确定系数
+            let factor, stage;
+            if (age < 1) {
+                factor = 2.5;
+                stage = "幼猫 (<1岁)";
+            } else if (age <= 7) {
+                factor = 1.2;
+                stage = "成年猫 (1-7岁)";
+            } else {
+                factor = 1.1;
+                stage = "老年猫 (>7岁)";
+            }
+            
+            // 计算DER（每日能量需求）
+            const der = Math.round(rer * factor);
+            
+            // 计算每日所需肉量
+            const meatAmount = Math.round((der / meatCalPer100g) * 100);
+            
+            // 显示结果
+            document.getElementById('calorie-result').textContent = der;
+            document.getElementById('meat-result').textContent = meatAmount;
+            document.getElementById('cat-stage').textContent = stage;
+            document.getElementById('meat-cal-note').textContent = `（按每100克肉提供${meatCalPer100g}千卡计算）`;
+        }
+        
+        // 初始化计算
+        calculate();
+    </script>
+</body>
+</html>
